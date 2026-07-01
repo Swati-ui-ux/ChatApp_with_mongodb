@@ -236,41 +236,72 @@ const formatTime = (date) =>
   
   
 return (
-  <div className="flex flex-col flex-1 h-full">
- {/* Header */}
-    <div className="bg-white border-b shadow-sm p-4 flex justify-between items-center">
+  <div className="flex h-full flex-1 flex-col bg-slate-100 transition-colors duration-300 dark:bg-slate-950">
+
+    {/* Header */}
+    <div className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
       <div>
-        <h2 className="text-xl font-semibold">{selectedUser.name}</h2>
-        <div className="flex items-center gap-2 mt-1">
-          <span className={`h-2.5 w-2.5 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`} />
-          <p className={`text-sm ${isOnline ? "text-green-600" : "text-gray-500"}`}>
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-white">
+          {selectedUser.name}
+        </h2>
+
+        <div className="mt-1 flex items-center gap-2">
+          <span className={`h-2.5 w-2.5 rounded-full ${isOnline ? "bg-emerald-500" : "bg-slate-400"}`} />
+
+          <p className={`text-sm font-medium ${
+            isOnline
+              ? "text-emerald-500"
+              : "text-slate-500 dark:text-slate-400"
+          }`}>
             {isOnline ? "Online" : "Offline"}
           </p>
         </div>
       </div>
+
       {isTyping && (
-        <p className="text-sm italic text-green-500">Typing...</p>
+        <p className="text-sm italic text-blue-500 dark:text-blue-400">
+          Typing...
+        </p>
       )}
     </div>
-   {/* Messages */}
-    <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+
+    {/* Messages */}
+    <div className="flex-1 overflow-y-auto bg-slate-100 p-5 transition-colors duration-300 dark:bg-slate-950">
+
       {messages.length ? (
         messages.map((msg) => {
           const isMe = String(msg.sender) === String(currentUser._id);
 
           return (
-            <div key={msg._id} className={`mb-3 flex ${isMe ? "justify-end" : "justify-start"}`}>
-              <div className={`max-w-[70%] rounded-2xl px-4 py-2 shadow-sm ${isMe ? "rounded-br-md bg-blue-400 text-white" : "rounded-bl-md bg-white text-black"}`}>
-                <p className="wrap-break-word">{msg.text}</p>
+            <div
+              key={msg._id}
+              className={`mb-4 flex ${isMe ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={
+                  isMe
+                    ? "max-w-[70%] rounded-2xl rounded-br-md bg-linear-to-r from-blue-600 to-blue-500 px-4 py-3 text-white shadow-md"
+                    : "max-w-[70%] rounded-2xl rounded-bl-md border border-slate-200 bg-white px-4 py-3 text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                }
+              >
+                <p className="wrap-break-word text-[15px] leading-relaxed">
+                  {msg.text}
+                </p>
 
-                <div className="mt-1 flex items-center justify-end gap-1 text-[10px]">
-                  <span className={isMe ? "text-blue-200" : "text-gray-500"}>{formatTime(msg.createdAt)}</span>
+                <div className="mt-2 flex items-center justify-end gap-1 text-[11px]">
+                  <span className={isMe ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}>
+                    {formatTime(msg.createdAt)}
+                  </span>
 
                   {isMe &&
                     (!msg.delivered ? (
-                      <BsCheck className="text-sm text-gray-200" />
+                      <BsCheck className="text-sm text-slate-300" />
                     ) : (
-                      <BsCheck2All className={`text-sm ${msg.seen ? "text-green-600" : "text-gray-300"}`} />
+                      <BsCheck2All
+                        className={`text-sm transition-colors ${
+                          msg.seen ? "text-emerald-400" : "text-slate-300"
+                        }`}
+                      />
                     ))}
                 </div>
               </div>
@@ -278,7 +309,7 @@ return (
           );
         })
       ) : (
-        <div className="flex h-full items-center justify-center text-gray-500">
+        <div className="flex h-full items-center justify-center text-lg font-medium text-slate-500 dark:text-slate-400">
           No messages yet
         </div>
       )}
@@ -286,38 +317,51 @@ return (
       <div ref={bottomRef} />
     </div>
 
-   {/* Input */}
-<div className="flex gap-3 border-t bg-white p-4">
+    {/* Input */}
+    <div className="flex items-center gap-3 border-t border-slate-200 bg-white p-4 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900">
 
-  <div className="relative">
-    <button onClick={() => setShowEmojiPicker(prev => !prev)} className="text-2xl">
-      <BsEmojiSmile />
-    </button>
+      <div className="relative">
+        <button
+          onClick={() => setShowEmojiPicker(prev => !prev)}
+          className="rounded-full p-2 text-2xl text-slate-500 transition hover:bg-slate-100 hover:text-blue-500 dark:text-slate-300 dark:hover:bg-slate-800"
+        >
+          <BsEmojiSmile />
+        </button>
 
-    {showEmojiPicker && (
-      <div ref={pickerRef} className="absolute bottom-12 left-0 z-50">
-        <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.LIGHT} />
+        {showEmojiPicker && (
+          <div
+            ref={pickerRef}
+            className="absolute bottom-12 left-0 z-50"
+          >
+            <EmojiPicker
+              onEmojiClick={handleEmojiClick}
+              theme={Theme.LIGHT}
+            />
+          </div>
+        )}
       </div>
-    )}
-  </div>
 
-  <input
-    type="text"
-    placeholder="Type a message..."
-    value={text}
-    onChange={handleChange}
-    onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSend())}
-    className="flex-1 rounded-full border px-5 py-3 outline-none focus:border-blue-500"
-  />
+      <input
+        type="text"
+        placeholder="Type a message..."
+        value={text}
+        onChange={handleChange}
+        onKeyDown={(e) =>
+          e.key === "Enter" &&
+          !e.shiftKey &&
+          (e.preventDefault(), handleSend())
+        }
+        className="flex-1 rounded-full border border-slate-300 bg-slate-50 px-5 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:bg-slate-700"
+      />
 
-  <button
-    onClick={handleSend}
-    className="rounded-full bg-blue-600 px-6 text-white transition hover:bg-blue-700"
-  >
-    Send
-  </button>
+      <button
+        onClick={handleSend}
+        className="rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:scale-105 hover:from-blue-700 hover:to-blue-600 active:scale-95"
+      >
+        Send
+      </button>
 
-</div>
+    </div>
 
   </div>
 );

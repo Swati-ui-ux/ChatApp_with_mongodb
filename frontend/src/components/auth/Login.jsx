@@ -56,66 +56,66 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+  <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 transition-colors duration-300 dark:bg-slate-950">
 
-      <div className="bg-white w-100 p-8 rounded-lg shadow-lg">
+    <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-2xl transition-colors duration-300 dark:border-slate-800 dark:bg-slate-900">
 
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Login
-        </h1>
+      <h1 className="mb-8 text-center text-3xl font-bold text-slate-800 dark:text-white">
+        Welcome Back 👋
+      </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border rounded p-3 outline-none"
-          />
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter your email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+        />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full border rounded p-3 outline-none"
-          />
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter your password"
+          value={formData.password}
+          onChange={handleChange}
+          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+        />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white p-3 rounded cursor-pointer"
-          >
-            {loading ? "Logging..." : "Login"}
-          </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        </form>
+      </form>
 
-        <div className="mt-4 flex justify-between text-sm">
+      <div className="mt-6 flex items-center justify-between text-sm">
 
-          <Link
-            to="/signup"
-            className="text-blue-600"
-          >
-            Create Account
-          </Link>
+        <Link
+          to="/signup"
+          className="font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+        >
+          Create Account
+        </Link>
 
-          <Link
-            to="/forgot-password"
-            className="text-blue-600"
-          >
-            Forgot Password?
-          </Link>
-
-        </div>
+        <Link
+          to="/forgot-password"
+          className="font-medium text-blue-600 transition hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+        >
+          Forgot Password?
+        </Link>
 
       </div>
 
     </div>
-  );
+
+  </div>
+);
 };
 
 export default Login;
