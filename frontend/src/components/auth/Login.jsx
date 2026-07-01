@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../utils/axiosInstence"
 import socket from '../../utils/socket'
+import { FaEye, FaEyeSlash } from "react-icons/fa"
 const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
-
+   const [isShowingPassword, setIsShowingPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -66,23 +67,33 @@ const Login = ({ setIsLoggedIn }) => {
 
       <form onSubmit={handleSubmit} className="space-y-5">
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
-        />
+       <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        value={formData.email}
+        onChange={handleChange}
+        className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+      />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
-        />
+          <div className="flex items-center justify-between w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 transition-all focus-within:border-blue-500 dark:border-slate-700 dark:bg-slate-800">
+  <input
+    type={isShowingPassword ? "text" : "password"}
+    name="password"
+    placeholder="Enter your password"
+    value={formData.password}
+    onChange={handleChange}
+    className="w-full bg-transparent text-slate-800 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
+  />
+
+ <span
+  type="button"
+  onClick={() => setIsShowingPassword(!isShowingPassword)}
+  className="ml-3 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400"
+>
+  {isShowingPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+</span>
+</div>
 
         <button
           type="submit"

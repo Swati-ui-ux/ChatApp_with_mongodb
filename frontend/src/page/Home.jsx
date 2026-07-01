@@ -46,12 +46,29 @@ useEffect(() => {
 
 <header className="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white/80 px-6 py-4 backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/80">
 
-<h1 className="flex items-center gap-2 text-2xl font-bold">
-💬 Chat App
-<span className="font-medium text-blue-600 dark:text-blue-400">
-{user?.name}
-</span>
-</h1>
+<div className="flex items-center gap-4">
+  <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-blue-500 bg-slate-200 dark:bg-slate-700">
+    {user?.profilePic ? (
+      <img
+        src={user.profilePic}
+        alt={user.name}
+        className="h-full w-full object-cover"
+      />
+    ) : (
+      <span className="text-lg font-bold text-slate-700 dark:text-white">
+        {user?.name?.charAt(0).toUpperCase()}
+      </span>
+    )}
+  </div>
+
+  <div>
+    <h1 className="text-2xl font-bold">💬 Chat App</h1>
+
+    <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+      Welcome, {user?.name}
+    </p>
+  </div>
+</div>
 
 <div className="flex gap-3">
 

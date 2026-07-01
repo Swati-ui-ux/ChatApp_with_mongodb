@@ -1,2 +1,30 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
+.user-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.user-scroll:hover {
+  scrollbar-color: #64748b transparent;
+}
+
+/* Chrome */
+.user-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.user-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.user-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 20px;
+}
+
+.user-scroll:hover::-webkit-scrollbar-thumb {
+  background: #64748b;
+}

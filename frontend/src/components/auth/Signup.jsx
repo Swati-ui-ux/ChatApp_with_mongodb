@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import api from "../../utils/axiosInstence"
 import { toast } from "react-toastify"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Signup = () => {
-
+  const [profilePic, setProfilePic] = useState(null);
+  const [isShowingPassword, setIsShowingPassword] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,11 +28,20 @@ const Signup = () => {
               const { name, email, password } = formData;
         if (!name || !email || !password) {
             return alert("All fields are required");
-        }
+          }  
+          const data = new FormData();
 
-            const res = await api.post('/users/register', formData)
+          data.append("name", formData.name);
+          data.append("email", formData.email);
+          data.append("password", formData.password);
+
+          if(profilePic){
+              data.append("profilePic", profilePic);
+          }
+          console.log("Form Data:", data);
+            const res = await api.post('/users/register', data)
             toast.success(res.message)
-            alert("sign up success")
+            navigate("/login")
              console.log(res)
                 setFormData({
                     name: "",
@@ -60,7 +71,7 @@ const Signup = () => {
           placeholder="Enter your name"
           value={formData.name}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all focus:text-white focus:placeholder:text-slate-400 focus:border-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
         />
 
         <input
@@ -69,18 +80,39 @@ const Signup = () => {
           placeholder="Enter your email"
           value={formData.email}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+           className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none   transition-all dark:focus:text-white dark:focus:placeholder:text-slate-400 dark:border-slate-700 dark:focus:border-blue-500 dark:text-white
+dark:bg-slate-800 dark:placeholder:text-slate-500 "
         />
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+            Profile Picture
+          </label>
 
-        <input
-          type="password"
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setProfilePic(e.target.files[0])}
+            className="block w-full cursor-pointer rounded-xl border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-700 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white file:cursor-pointer hover:file:bg-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:file:bg-blue-500 dark:hover:file:bg-blue-600"
+          />
+
+          {profilePic && (
+            <p className="text-sm text-green-600 dark:text-green-400">
+              Selected: {profilePic.name}
+            </p>
+          )}
+        </div>
+       
+         <div className="relative flex justify-between rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all focus:text-black focus:placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500">
+          <input
+          type={isShowingPassword ? "text" : "password"}
           name="password"
           placeholder="Create a password"
           value={formData.password}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-blue-500"
-        />
-
+          className="  outline-none transition-all dark:focus:text-black placeholder:text-slate-400 focus:border-blue-500  dark:border-slate-700 dark:bg-slate-800 dark:placeholder:text-slate-500 dark:focus:border-blue-500"
+           />
+           <span onClick={()=>setIsShowingPassword(!isShowingPassword)}>{isShowingPassword ? 'Hide' : 'Show'}</span>
+         </div>
         <button
           type="submit"
           className="w-full rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-700 active:scale-95"

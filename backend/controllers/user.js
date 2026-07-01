@@ -1,11 +1,23 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user");
 const bcrypt = require('bcrypt')
+const { uploadOnCloudinary } = require("../utils/cloudinary")
 // Register User
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
+    let profilePic = ''
+    console.log("File:", req.file);
+     if(req.file){
+    const cloudinaryResponse =
+         await uploadOnCloudinary(req.file.path);
+       if (!cloudinaryResponse) {
+          return res.status(400).json({
+              message:"Image upload failed"
+          });
+       }
+       profilePic = cloudinaryResponse.secure_url;
+     }
     const userExist = await User.findOne({ email });
 
     if (userExist) {
@@ -18,6 +30,7 @@ const register = async (req, res) => {
       name,
       email,
       password:hashedPassword,
+      profilePic
     });
 
     res.status(201).json({
@@ -53,9 +66,8 @@ const getUsers = async (req, res) => {
 
 const login = async(req,res) => {
    try {
-     const { email ,password} = req.body;
+     const { email, password } = req.body;     
      if (!email) return res.status(404).json({ message: "email is require" })
-     
      if (!password) return res.status(404).json({ message: "password is require" })
      const user = await User.findOne({ email })
      if(!user)return res.status(404).json({message:"user not found"})
