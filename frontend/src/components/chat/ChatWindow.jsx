@@ -257,16 +257,10 @@ return (
           </p>
         </div>
       </div>
-
-      {isTyping && (
-        <p className="text-sm italic text-blue-500 dark:text-blue-400">
-          Typing...
-        </p>
-      )}
     </div>
 
     {/* Messages */}
-    <div className="flex-1 overflow-y-auto bg-slate-100 p-5 transition-colors duration-300 dark:bg-slate-950">
+    <div className="flex-1 user-scroll overflow-y-auto bg-slate-100 p-5 transition-colors duration-300 dark:bg-slate-950">
 
       {messages.length ? (
         messages.map((msg) => {
@@ -307,13 +301,18 @@ return (
               </div>
             </div>
           );
+                  
         })
       ) : (
         <div className="flex h-full items-center justify-center text-lg font-medium text-slate-500 dark:text-slate-400">
           No messages yet
         </div>
       )}
-
+      {isTyping && (
+        <p className="text-sm italic text-blue-500 dark:text-white">
+          Typing...
+        </p>
+      )}
       <div ref={bottomRef} />
     </div>
 
