@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken")
 const User = require("../models/user");
+require("../config/firebaseAdmin")
+const {getAuth} = require("firebase-admin/auth")
 const bcrypt = require('bcrypt')
 const { uploadOnCloudinary } = require("../utils/cloudinary")
 // Register User
@@ -96,9 +98,44 @@ const getAllUsers = async (req, res) => {
     
   }
 }
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const decodedToken = await getAuth().verifyIdToken(token);
+    const { email, name, picture, uid } = decodedToken;
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = await User.create({
+        name,
+        email,
+        googleId: uid,
+        profilePic: picture,
+        password: "",
+      });
+    } else {
+      if (!user.googleId) {
+        user.googleId = uid;
+      }
+
+      if (!user.profilePic) {
+        user.profilePic = picture;
+      }
+
+      await user.save();
+    }
+    
+    const jwtToken = jwt.sign({ userId: user.id, email: user.email }, process.env.SECRET_KEY, { expiresIn: '7d' });
+    res.status(200).json({ message: "User login success", user, token: jwtToken });
+  }catch (error) {
+    console.log("Error in google login",error.message)
+    res.status(500).json({message:"server error"})
+  }
+}
+
 module.exports = {
   register,
   getUsers,
   login,
+  googleLogin,
   getAllUsers,
 };

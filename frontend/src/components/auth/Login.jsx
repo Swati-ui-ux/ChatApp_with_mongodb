@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../firebase";
 import { toast } from "react-toastify";
 import api from "../../utils/axiosInstence"
 import socket from '../../utils/socket'
 import { FaEye, FaEyeSlash } from "react-icons/fa"
+import { FcGoogle } from "react-icons/fc"
 const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
    const [isShowingPassword, setIsShowingPassword] = useState(false);
@@ -55,7 +58,26 @@ const Login = ({ setIsLoggedIn }) => {
       setLoading(false);
     }
   };
+  // gooogle login
+  const googleLogin = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
 
+    const result = await signInWithPopup(auth, provider);
+
+    const token = await result.user.getIdToken();
+
+    const res = await api.post("/users/google-login", {
+      token,
+    });
+    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user));
+
+    window.location.href = "/";
+  } catch (err) {
+    console.log(err);
+  }
+};
   return (
   <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 transition-colors duration-300 dark:bg-slate-950">
 
@@ -101,8 +123,25 @@ const Login = ({ setIsLoggedIn }) => {
           className="w-full rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-700 hover:to-indigo-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? "Logging in..." : "Login"}
-        </button>
+          </button>
+          <div className="my-5 flex items-center">
+  <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
 
+  <span className="mx-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+    OR
+  </span>
+
+  <div className="h-px flex-1 bg-slate-300 dark:bg-slate-700"></div>
+</div>
+       <button
+        type="button"
+        onClick={googleLogin}
+        className="group cursor-pointer flex w-full items-center justify-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 font-medium text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-400 hover:bg-slate-50 hover:shadow-md active:scale-[0.98] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-700"
+      >
+        <FcGoogle className="text-2xl" />
+
+        <span>Continue with Google</span>
+      </button>
       </form>
 
       <div className="mt-6 flex items-center justify-between text-sm">
