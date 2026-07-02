@@ -9,6 +9,8 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     let profilePic = ''
+    console.log("BODY =>", req.body);
+console.log("FILE =>", req.file);
     console.log("File:", req.file);
      if(req.file){
     const cloudinaryResponse =
